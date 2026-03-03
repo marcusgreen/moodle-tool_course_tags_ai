@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/../../../../config.php');
+require_once(__DIR__ . '/../../../config.php');
 
 // Get and validate course ID.
 $courseid = required_param('courseid', PARAM_INT);
@@ -50,20 +50,34 @@ echo $OUTPUT->header();
 // Show introduction.
 echo $OUTPUT->box(get_string('intro_suggestions', 'tool_course_tag_ai'));
 
-// Show placeholder AI suggestions based on course data.
+// Show AI suggestions based on course items.
 echo $OUTPUT->heading(get_string('heading_suggestions', 'tool_course_tag_ai'), 2);
 
-echo \html_writer::start_div('alert alert-info');
-echo get_string('intro_suggestions', 'tool_course_tag_ai');
-echo ' ';
-echo html_writer::strong('Course: ' . $course->shortname);
-if ($course->category) {
-    $category = core_course_category::get($course->category);
-    echo ' | Category: ' . $category->name;
+try {
+    $suggestioncount = (int) get_config('tool_course_tag_ai', 'suggestioncount') ?: 5;
+    $suggestions = \tool_course_tag_ai\helper::get_ai_suggestions($courseid, $suggestioncount);
+
+    if (!empty($suggestions)) {
+        echo \html_writer::start_div('alert alert-success');
+        echo \html_writer::tag('strong', get_string('suggested_tags', 'tool_course_tag_ai') . ':');
+        echo ' ';
+        echo implode(', ', array_map(function($tag) {
+            return \html_writer::tag('span', format_string($tag), ['class' => 'badge badge-primary']);
+        }, $suggestions));
+        echo \html_writer::end_div();
+    } else {
+        echo \html_writer::start_div('alert alert-warning');
+        echo get_string('no_suggestions', 'tool_course_tag_ai');
+        echo \html_writer::end_div();
+    }
+} catch (\Exception $e) {
+    echo \html_writer::start_div('alert alert-danger');
+    echo get_string('error_ai_service', 'tool_course_tag_ai');
+    echo \html_writer::end_div();
+    debugging('AI suggestions error: ' . $e->getMessage(), DEBUG_DEVELOPER);
 }
-echo \html_writer::end_div();
 
 // Show back button.
-echo $OUTPUT->single_button($backurl, get_string('back', 'core'), 'get', false);
+echo $OUTPUT->single_button($backurl, get_string('back', 'core'), 'get');
 
 echo $OUTPUT->footer();

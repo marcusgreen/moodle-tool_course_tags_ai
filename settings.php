@@ -27,5 +27,25 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     // Create settings page under 'tools' category.
     $settings = new \admin_settingpage('tool_course_tag_ai', get_string('pluginname', 'tool_course_tag_ai'));
+
+    // Add setting for custom prompt template.
+    $settings->add(new \admin_setting_configtextarea(
+        'tool_course_tag_ai/prompt',
+        get_string('prompt_setting', 'tool_course_tag_ai'),
+        get_string('prompt_setting_desc', 'tool_course_tag_ai'),
+        get_string('default_prompt', 'tool_course_tag_ai'),
+        PARAM_TEXT
+    ));
+
+    // Add setting for number of suggestions to return.
+    $settings->add(new \admin_setting_configtext(
+        'tool_course_tag_ai/suggestioncount',
+        get_string('suggestioncount_setting', 'tool_course_tag_ai'),
+        get_string('suggestioncount_setting_desc', 'tool_course_tag_ai'),
+        5,
+        PARAM_INT,
+        3
+    ));
+
     $ADMIN->add('tools', $settings);
 }
