@@ -40,6 +40,11 @@ class before_footer_listener {
     public static function before_footer_html_generation(before_footer_html_generation $hook): void {
         global $PAGE;
 
+        // Check if AI suggestions are enabled. Exit early if disabled.
+        if (!get_config('tool_course_tag_ai', 'enable_ai_suggestions')) {
+            return;
+        }
+
         // Get course ID from URL parameter.
         $courseid = $PAGE->url->get_param('id');
 

@@ -28,6 +28,14 @@ if ($hassiteconfig) {
     // Create settings page under 'tools' category.
     $settings = new \admin_settingpage('tool_course_tag_ai', get_string('pluginname', 'tool_course_tag_ai'));
 
+    // Add setting to enable/disable AI suggestions button.
+    $settings->add(new \admin_setting_configcheckbox(
+        'tool_course_tag_ai/enable_ai_suggestions',
+        get_string('enable_ai_suggestions', 'tool_course_tag_ai'),
+        get_string('enable_ai_suggestions_description', 'tool_course_tag_ai'),
+        0
+    ));
+
     // Add setting for custom prompt template.
     $settings->add(new \admin_setting_configtextarea(
         'tool_course_tag_ai/prompt',
