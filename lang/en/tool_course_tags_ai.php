@@ -48,3 +48,6 @@ $string['backend_setting_desc'] = 'Select which LLM backend service to use for A
 $string['backend_local_ai_manager'] = 'Local AI Manager (Mebis)';
 $string['backend_core_ai_subsystem'] = 'Moodle Core AI Subsystem (4.5+)';
 $string['backend_tool_aimanager'] = 'Tool AI Manager';
+$string['err_invalidbackend'] = 'Invalid LLM backend configured. Please check the plugin settings.';
+$string['err_retrievingfeedback'] = 'Error retrieving AI suggestions: {$a}';
+$string['err_retrievingfeedback_checkconfig'] = 'Error retrieving AI suggestions. Please check your AI service configuration.';
